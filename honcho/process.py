@@ -3,6 +3,7 @@ from __future__ import print_function
 import signal
 import subprocess
 import sys
+import os
 from threading import Thread
 
 try:
@@ -43,6 +44,21 @@ class Process(subprocess.Popen):
 
         super(Process, self).__init__(cmd, *args, **defaults)
 
+    def term(self, sig):
+        """
+        Send signal to the process's process group, unless our process
+        is in the same group, then just send it to the process rather than
+        kill ourselves.
+        """
+        if self.poll() is None:
+            proc_pgid = os.getpgid(self.pid)
+            if os.getpgrp() == proc_pgid:
+                # Just kill the proc, don't kill ourselves too
+                os.kill(self.pid, sig)
+            else:
+                # Kill the whole process group
+                os.killpg(proc_pgid, sig)
+
 
 class ProcessManager(object):
     """
@@ -68,6 +84,8 @@ class ProcessManager(object):
         self.returncode = None
 
         self._terminating = False
+
+        signal.signal(signal.SIGTERM, self.terminate)
 
     def add_process(self, name, cmd, quiet=False):
         """
@@ -142,7 +160,7 @@ class ProcessManager(object):
 
         return self.returncode
 
-    def terminate(self):
+    def terminate(self, *args, **kwargs):
         """
 
         Terminate all the child processes of this ProcessManager, bringing the
@@ -158,14 +176,14 @@ class ProcessManager(object):
         for proc in self.processes:
             if proc.poll() is None:
                 print("sending SIGTERM to pid {0:d}".format(proc.pid), file=self.system_printer)
-                proc.terminate()
+                proc.term(signal.SIGTERM)
 
         def kill(signum, frame):
             # If anything is still alive, SIGKILL it
             for proc in self.processes:
                 if proc.poll() is None:
                     print("sending SIGKILL to pid {0:d}".format(proc.pid), file=self.system_printer)
-                    proc.kill()
+                    proc.term(signal.SIGKILL)
 
         if ON_WINDOWS:
             # SIGALRM is not supported on Windows: just kill instead
