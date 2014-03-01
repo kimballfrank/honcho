@@ -191,7 +191,6 @@ class ProcessManager(object):
             kill(None, None)
         else:
             # the default is POSIX
-            print 'kimball'
             signal.signal(signal.SIGALRM, kill)  # @UndefinedVariable
             signal.alarm(5)  # @UndefinedVariable
 
