@@ -191,9 +191,8 @@ class ProcessManager(object):
             kill(None, None)
         else:
             # the default is POSIX
-            kill(None, None)
-            # signal.signal(signal.SIGKILL, kill)  # @UndefinedVariable
-            # signal.alarm(5)  # @UndefinedVariable
+            signal.signal(signal.SIGKILL, kill)  # @UndefinedVariable
+            signal.alarm(5)  # @UndefinedVariable
 
     def _process_count(self):
         return [p.poll() for p in self.processes].count(None)
