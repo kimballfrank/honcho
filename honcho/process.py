@@ -100,7 +100,6 @@ class ProcessManager(object):
                       (e.g. 'python run.py')
 
         """
-
         self.processes.append(Process(cmd, name=name, quiet=quiet))
 
     def loop(self):
@@ -191,6 +190,7 @@ class ProcessManager(object):
             kill(None, None)
         else:
             # the default is POSIX
+            print("sending signal.SIGALARM, kill to pid {0:d}".format(proc.pid), file =self.system_printer)
             signal.signal(signal.SIGALRM, kill)  # @UndefinedVariable
             signal.alarm(5)  # @UndefinedVariable
 
