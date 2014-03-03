@@ -100,7 +100,7 @@ class ProcessManager(object):
                       (e.g. 'python run.py')
 
         """
-        print(cmd)
+        cmd = "exec {0}".format(cmd)
         self.processes.append(Process(cmd, name=name, quiet=quiet))
 
     def loop(self):
