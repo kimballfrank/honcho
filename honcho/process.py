@@ -100,7 +100,6 @@ class ProcessManager(object):
                       (e.g. 'python run.py')
 
         """
-        cmd = "exec {0}".format(cmd)
         self.processes.append(Process(cmd, name=name, quiet=quiet))
 
     def loop(self):
@@ -191,7 +190,7 @@ class ProcessManager(object):
             kill(None, None)
         else:
             # the default is POSIX
-            signal.signal(signal.SIGALRM, kill)  # @UndefinedVariable
+            signal.signal(signal.SIGKILL, kill)  # @UndefinedVariable
             signal.alarm(5)  # @UndefinedVariable
 
     def _process_count(self):
