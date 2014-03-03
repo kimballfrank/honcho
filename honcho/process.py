@@ -16,7 +16,6 @@ from .printer import Printer
 from .compat import ON_WINDOWS
 
 
-
 class Process(subprocess.Popen):
     """
 
@@ -101,6 +100,7 @@ class ProcessManager(object):
                       (e.g. 'python run.py')
 
         """
+
         self.processes.append(Process(cmd, name=name, quiet=quiet))
 
     def loop(self):
@@ -191,7 +191,7 @@ class ProcessManager(object):
             kill(None, None)
         else:
             # the default is POSIX
-            signal.signal(signal.SIGKILL, kill)  # @UndefinedVariable
+            signal.signal(signal.SIGALRM, kill)  # @UndefinedVariable
             signal.alarm(5)  # @UndefinedVariable
 
     def _process_count(self):
