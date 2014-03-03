@@ -100,6 +100,7 @@ class ProcessManager(object):
                       (e.g. 'python run.py')
 
         """
+        print(cmd)
         self.processes.append(Process(cmd, name=name, quiet=quiet))
 
     def loop(self):
@@ -181,7 +182,6 @@ class ProcessManager(object):
         def kill(signum, frame):
             # If anything is still alive, SIGKILL it
             for proc in self.processes:
-                print('process still alive: {}', proc.name)
                 if proc.poll() is None:
                     print("sending SIGKILL to pid {0:d}".format(proc.pid), file=self.system_printer)
                     proc.term(signal.SIGKILL)
