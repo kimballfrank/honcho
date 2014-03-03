@@ -182,7 +182,6 @@ class ProcessManager(object):
         def kill(signum, frame):
             # If anything is still alive, SIGKILL it
             for proc in self.processes:
-                print('process still alive: {}', proc.name)
                 if proc.poll() is None:
                     print("sending SIGKILL to pid {0:d}".format(proc.pid), file=self.system_printer)
                     proc.term(signal.SIGKILL)
@@ -192,8 +191,9 @@ class ProcessManager(object):
             kill(None, None)
         else:
             # the default is POSIX
-            signal.signal(signal.SIGALRM, kill)  # @UndefinedVariable
-            signal.alarm(5)  # @UndefinedVariable
+            kill(None, None)
+            # signal.signal(signal.SIGKILL, kill)  # @UndefinedVariable
+            # signal.alarm(5)  # @UndefinedVariable
 
     def _process_count(self):
         return [p.poll() for p in self.processes].count(None)
