@@ -190,7 +190,7 @@ class ProcessManager(object):
             kill(None, None)
         else:
             # the default is POSIX
-            proc.term(signal.SIGKILL)
+            kill(None, None)
             # signal.signal(signal.SIGKILL, kill)  # @UndefinedVariable
             # signal.alarm(5)  # @UndefinedVariable
 
