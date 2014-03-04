@@ -16,6 +16,8 @@ from .printer import Printer
 from .compat import ON_WINDOWS
 
 
+
+
 class Process(subprocess.Popen):
     """
 
@@ -51,11 +53,14 @@ class Process(subprocess.Popen):
         kill ourselves.
         """
         if self.poll() is None:
+            import pdb; pdb.set_trace()
             proc_pgid = os.getpgid(self.pid)
             if os.getpgrp() == proc_pgid:
+                import pdb; pdb.set_trace()
                 # Just kill the proc, don't kill ourselves too
                 os.kill(self.pid, sig)
             else:
+                import pdb; pdb.set_trace()
                 # Kill the whole process group
                 os.killpg(proc_pgid, sig)
 
@@ -184,12 +189,6 @@ class ProcessManager(object):
                 if proc.poll() is None:
                     print("sending SIGKILL to pid {0:d}".format(proc.pid), file=self.system_printer)
                     proc.term(signal.SIGKILL)
-                else:
-                    for proc in proc.processes:
-                        if proc.poll() is None:
-                            print("sending SIGKILL to pid {0:d}".format(proc.pid), file=self.system_printer)
-                            proc.term(signal.SIGKILL)
-
 
         if ON_WINDOWS:
             # SIGALRM is not supported on Windows: just kill instead
