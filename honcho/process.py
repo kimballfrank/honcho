@@ -185,7 +185,7 @@ class ProcessManager(object):
                     print("sending SIGKILL to pid {0:d}".format(proc.pid), file=self.system_printer)
                     proc.term(signal.SIGKILL)
                 else:
-                    for proc in self.processes:
+                    for proc in proc.processes:
                         if proc.poll() is None:
                             print("sending SIGKILL to pid {0:d}".format(proc.pid), file=self.system_printer)
                             proc.term(signal.SIGKILL)
