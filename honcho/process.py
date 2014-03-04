@@ -173,7 +173,6 @@ class ProcessManager(object):
         self._terminating = True
 
         print("sending SIGTERM to all processes", file=self.system_printer)
-        import pdb; pdb.set_trace()
         for proc in self.processes:
             if proc.poll() is None:
                 print("sending SIGTERM to pid {0:d}".format(proc.pid), file=self.system_printer)
@@ -185,6 +184,12 @@ class ProcessManager(object):
                 if proc.poll() is None:
                     print("sending SIGKILL to pid {0:d}".format(proc.pid), file=self.system_printer)
                     proc.term(signal.SIGKILL)
+                else:
+                    for proc in self.processes:
+                        if proc.poll() is None:
+                            print("sending SIGKILL to pid {0:d}".format(proc.pid), file=self.system_printer)
+                            proc.term(signal.SIGKILL)
+
 
         if ON_WINDOWS:
             # SIGALRM is not supported on Windows: just kill instead
